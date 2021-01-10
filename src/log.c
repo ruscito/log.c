@@ -42,12 +42,12 @@ static struct {
 pthread_mutex_t MUTEX_LOG;
 
 static const char *level_strings[] = {
-  "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
+    "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "APP"
 };
 
 #ifdef LOG_USE_COLOR
 static const char *level_colors[] = {
-  "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
+    "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m", "\x1b[100m\x1b[97m" 
 };
 #endif
 
