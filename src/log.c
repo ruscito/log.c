@@ -20,7 +20,8 @@
  * IN THE SOFTWARE.
  */
 
-#include "log.h"
+#include <log.h>
+#include <pthread.h>
 
 #define MAX_CALLBACKS 32
 
@@ -38,6 +39,7 @@ static struct {
   Callback callbacks[MAX_CALLBACKS];
 } L;
 
+pthread_mutex_t MUTEX_LOG;
 
 static const char *level_strings[] = {
   "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
@@ -68,6 +70,24 @@ static void stdout_callback(log_Event *ev) {
   fflush(ev->udata);
 }
 
+
+void log_lock(bool lock, void* udata) {
+  pthread_mutex_t *LOCK = (pthread_mutex_t*)(udata);
+  if (lock)
+    pthread_mutex_lock(LOCK);
+  else
+    pthread_mutex_unlock(LOCK);
+}
+
+void log_init(void) {
+  pthread_mutex_init(&MUTEX_LOG, NULL);
+  log_set_lock(log_lock, &MUTEX_LOG);
+}
+
+void log_terminate(void)
+{
+    pthread_mutex_destroy(&MUTEX_LOG);
+}
 
 static void file_callback(log_Event *ev) {
   char buf[64];
